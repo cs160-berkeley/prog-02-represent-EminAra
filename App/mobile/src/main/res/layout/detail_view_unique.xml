@@ -1,0 +1,60 @@
+
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.cs160.joleary.catnip.Detail"
+    android:background="#2980b9">
+
+    <ImageView
+        android:layout_width="125dp"
+        android:layout_height="150dp"
+        android:id="@+id/imgSenator"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/rectangle_5"
+        android:adjustViewBounds="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Dianne Feinstein"
+        android:id="@+id/textSenatorName"
+        android:layout_below="@+id/imgSenator"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ecf0f1"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Democratic Senator - CA\n End date of term : January 3, 2018 "
+        android:id="@+id/imgSenatorTitle"
+        android:layout_below="@+id/textSenatorName"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textColor="#ecf0f1"
+        android:textSize="14dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Committees serving:\n. Committee on Appropriations  \n. Committee on the Judiciary  \n. Committee on Rules and Administration  \n. Select Committee on Intelligence (Vice Chair)  \n\nBills Sponsored:  \n. S. 2552 introduced on Feb 11, 2016  \n. S. 2533 introduced on Feb 10, 2016  \n. S. 2422 introduced on Jan 20, 2016  \n. S. 2442 introduced on Jan 12, 2016  \n. S. 2372 introduced on Dec 8, 2015"
+        android:id="@+id/textSenatorDetails"
+        android:layout_below="@+id/imgSenatorTitle"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="24dp"
+        android:textColor="#ecf0f1"
+        android:textSize="15dp" />
+</RelativeLayout>
+

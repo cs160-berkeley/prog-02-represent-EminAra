@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#2c3e50">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Obama"
+        android:id="@+id/textView2"
+        android:textSize="16dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/imageView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Romney"
+        android:id="@+id/name"
+        android:textSize="16dp"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/imageView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="2012 presidential"
+        android:id="@+id/textView4"
+        android:textSize="14dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="vote in CA - Alameda"
+        android:id="@+id/textPlace"
+        android:textSize="14dp"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="25dp"
+        android:id="@+id/imageView"
+        android:background="@drawable/indicator"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/textView4" />
+
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/prgElection"
+        android:progressTint="#ff393c"
+        android:backgroundTint="#0abdff"
+        android:foreground="#4755ff"
+        android:progress="50"
+        android:max="100"
+        android:indeterminate="false"
+        android:layout_above="@+id/imageView"
+        android:layout_alignStart="@+id/name"
+        android:layout_marginBottom="24dp"
+        android:layout_alignParentEnd="true" />
+
+
+</RelativeLayout>
