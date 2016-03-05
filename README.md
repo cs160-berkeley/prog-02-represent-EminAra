@@ -12,7 +12,7 @@ See [your demo video title here] (https://link_to_your_video)
 
 ## Screenshots
 
-
+*Note: This design will change*
 <div><p><center>
 <img src="https://i.imgsafe.org/d8ccfbc.png" width="268.8" height="460.8" align="left"/>
 <img src="https://i.imgsafe.org/d9cb81c.png" width="268.8" height="460.8" align="right"/></center></p><BR CLEAR="both"></div>
