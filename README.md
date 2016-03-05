@@ -12,7 +12,7 @@ See [your demo video title here] (https://link_to_your_video)
 
 ## Screenshots
 
-<img src="http://postimg.org/image/58jr9qugv/">
+<img src="https://i.imgsafe.org/d8ccfbc.png" height=400>
 
 ## Acknowledgments
 
