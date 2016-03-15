@@ -11,7 +11,9 @@ import android.content.Context;
 import android.support.wearable.view.FragmentGridPagerAdapter;
 
 
-
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,10 +30,16 @@ public class SampleGridPagerAdapter extends FragmentGridPagerAdapter {
     private  HashMap<String, ArrayList<congressPerson>>  dataSource  ;
 
 
+    private JSONObject jsonData;
+
+    public void setJsonData(JSONObject jsonData) {
+        this.jsonData = jsonData;
+    }
+
     public SampleGridPagerAdapter(Context ctx, FragmentManager fm) {
         super(fm);
         mContext = ctx;
-        dataSource_fill();
+
 
 
     }
@@ -66,20 +74,29 @@ private final Page[][] PAGES = {  };
             senatorView fragment = new senatorView();
 
 
-
-            congressPerson chosen_senator = dataSource.get(currentZip).get(col);
-
-
-            fragment.initializeWithSenatorName(String.format("%s \n %s", chosen_senator.getName(),chosen_senator.getTitle()), R.drawable.senator_1, col, mContext, currentZip);
-
-
-
+            JSONObject chosen_senator = null;
+            try {
+                chosen_senator = jsonData.getJSONArray("people").getJSONObject(col);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
+            Boolean showPrev = !(col == 0);
+            Boolean showNext = false;
+
+            try {
+                 showNext = !(col == jsonData.getJSONArray("people").length()-1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
-
-
+            try {
+                fragment.initializeWithSenatorName(chosen_senator.getString("name"), R.drawable.senator_1, col, mContext, currentZip,showPrev,showNext,chosen_senator.getString("party"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
             return fragment;
@@ -90,15 +107,11 @@ private final Page[][] PAGES = {  };
 
             electionView fragment = new electionView();
 
-            if (currentZip.equals( "94704")) {
-                fragment.initElection("Obama", "Romney", "Alameda", 66);
-            }else
-
-            {
-                fragment.initElection("Obama", "Romney", "Los Angeles", 33);
+            try {
+                fragment.initElection("Obama", "Romney", jsonData.getString("zip"), jsonData.getJSONObject("votes").getInt("obama"));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-
 
 
             return fragment;
@@ -121,17 +134,17 @@ private final Page[][] PAGES = {  };
 
         if (rowNum == 0)
         {
-            if (dataSource.get(currentZip) == null) {
-                dataSource_fill();
-            }
 
-            if (dataSource.get(currentZip) != null)
-            {
-                return dataSource.get(currentZip).size();
-            }else
-            {
-                return 2;
-            }
+
+
+                try {
+                    return jsonData.getJSONArray("people").length();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+
+
 
         }
         else
@@ -144,32 +157,7 @@ private final Page[][] PAGES = {  };
     }
 
 
-    private void dataSource_fill()
 
-    {
-        dataSource = new HashMap<String, ArrayList<congressPerson>>() ;
-
-
-
-
-        ArrayList<congressPerson> senators_batch_1 = new ArrayList<congressPerson>();
-
-
-        senators_batch_1.add(new congressPerson("Emin1","emin@emin.com \n www.emin.com","Senator - Republican","Let's vote California #freedom", R.drawable.senator_1,"Bill 1 \n Committee 1"));
-        senators_batch_1.add(new congressPerson("Emin2", "emin@emin.com \n www.emin.com", "Senator - Republican", "Let's vote California #freedom", R.drawable.senator_1, "Bill 1 \n Committee 1"));
-
-        dataSource.put("94704", senators_batch_1);
-
-        ArrayList<congressPerson> senators_batch_2 = new ArrayList<congressPerson>();
-
-
-        senators_batch_2.add(new congressPerson("Emin3","emin@emin.com \n www.emin.com","Senator - Republican","Let's vote California #freedom", R.drawable.senator_1,"Bill 1 \n Committee 1"));
-        senators_batch_2.add(new congressPerson("Emin4","emin@emin.com \n www.emin.com","Senator - Republican","Let's vote California #freedom", R.drawable.senator_1,"Bill 1 \n Committee 1"));
-
-        dataSource.put("94703", senators_batch_2);
-
-
-    }
 
 
 

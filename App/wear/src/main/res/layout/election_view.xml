@@ -48,8 +48,8 @@
         android:layout_width="100dp"
         android:layout_height="25dp"
         android:id="@+id/imageView"
-        android:background="@drawable/indicator"
-        android:layout_alignParentBottom="true"
+        android:background="@drawable/indicator_top"
+        android:layout_alignParentTop="true"
         android:layout_alignEnd="@+id/textView4" />
 
 
@@ -64,10 +64,10 @@
         android:progress="50"
         android:max="100"
         android:indeterminate="false"
-        android:layout_above="@+id/imageView"
-        android:layout_alignStart="@+id/name"
-        android:layout_marginBottom="24dp"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="25dp"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

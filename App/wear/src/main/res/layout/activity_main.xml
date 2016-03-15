@@ -6,16 +6,26 @@
     android:background="#4596ff">
 
 
-
-
-
     <android.support.wearable.view.GridViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#2c3e50"
+        android:alpha="1"
+        android:backgroundTint="#2c3e50"
+        android:foreground="#2c3e50" />
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Shake for\n Random Info!"
+        android:gravity="center"
+        android:id="@+id/lblShake"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="-130dp"
+        android:textAlignment="center" />
 
 
 </LinearLayout>

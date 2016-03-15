@@ -8,7 +8,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.cs160.joleary.catnip.congressional"
-    android:background="#2c3e50">
+    android:background="#2c3e50"
+    android:id="@id/card">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,14 +24,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Dianne Feinstein"
+            android:text="Dianne Feinstein Dianne Feinstein Dianne FeinsteinDianne Feinstein"
             android:id="@+id/textName"
             android:layout_row="0"
             android:layout_column="0"
             android:textColor="#ecf0f1"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="125dp"
+            android:textSize="20dp" />
 
         <ImageView
             android:layout_width="110dp"
@@ -43,8 +46,7 @@
             android:layout_rowWeight="0"
             android:adjustViewBounds="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentEnd="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -58,7 +60,8 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_below="@+id/textName"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:textSize="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,41 +73,33 @@
             android:layout_column="0"
             android:textColor="#ecf0f1"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="10dp"
-            android:layout_alignBottom="@+id/imgSen"
-            android:layout_alignStart="@+id/textTwitter" />
+            android:layout_marginLeft="0dp"
+            android:textSize="10dp"
+            android:layout_above="@+id/imageView3"
+            android:layout_alignStart="@+id/textTitle" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Today we reflect on the contributions and leadership of U.S. presidents throughout our nation’s great history. Happy #PresidentsDay."
+            android:text="\@Dianne: Today we reflect on the contributions and leadership of U.S. presidents throughout our nation’s great history. Happy #PresidentsDay@."
             android:id="@+id/textTwitter"
             android:layout_row="3"
             android:layout_column="0"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:textColor="#ecf0f1"
-            android:layout_alignTop="@+id/whitebox"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="23dp" />
-
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:id="@+id/whitebox"
-            android:src="@drawable/rectangle_12"
-            android:adjustViewBounds="true"
+            android:layout_marginRight="20dp"
             android:layout_below="@+id/imageView3"
-            android:layout_alignParentStart="true"
-            android:layout_alignEnd="@+id/imgSen" />
+            android:layout_alignParentEnd="true"
+            android:textAlignment="center" />
 
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/imageView3"
             android:src="@drawable/rectangle_6"
-            android:layout_below="@+id/textComm"
-            android:layout_alignEnd="@+id/textTitle"
-            android:layout_marginTop="20dp" />
+            android:layout_below="@+id/imgSen"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="22dp" />
 
     </RelativeLayout>
 

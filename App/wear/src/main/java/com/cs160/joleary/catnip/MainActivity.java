@@ -12,6 +12,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,19 +39,25 @@ public class MainActivity extends Activity {
         Bundle extras = intent.getExtras();
         if (extras != null) {
             currentZip = extras.getString("ZIP");
-        }else
 
-        {
-            currentZip = "94704";
+            JSONObject data_ = null;
+            try {
+                data_ = new JSONObject(currentZip);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            final GridViewPager pager = (GridViewPager) findViewById(R.id.pager);
+
+            SampleGridPagerAdapter adapter_ = new SampleGridPagerAdapter(this, getFragmentManager());
+
+            adapter_.setJsonData(data_);
+
+            pager.setAdapter(adapter_);
+            TextView txtShake = (TextView) this.findViewById(R.id.lblShake);
+            txtShake.setText("");
         }
-
-        final GridViewPager pager = (GridViewPager) findViewById(R.id.pager);
-
-        SampleGridPagerAdapter adapter_ = new SampleGridPagerAdapter(this, getFragmentManager());
-
-        adapter_.setCurrentZip(currentZip);
-
-        pager.setAdapter(adapter_);
 
            /* do this in onCreate */
         mSensorManager = (SensorManager) getSystemService(getApplicationContext().SENSOR_SERVICE);

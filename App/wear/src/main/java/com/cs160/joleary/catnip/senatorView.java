@@ -2,9 +2,9 @@ package com.cs160.joleary.catnip;
 
 import android.app.Fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +27,11 @@ public class senatorView extends Fragment {
     private Context context_i;
 
     private String CurrentZip;
+    private Boolean show_prev;
+    private Boolean show_next;
+
+    private String party;
+
 
 
 
@@ -45,7 +50,6 @@ public class senatorView extends Fragment {
             public void onClick(View v) {
 
 
-
                 Intent sendIntent = new Intent(context_i, WatchToPhoneService.class);
                 sendIntent.putExtra("POS", row_i);
 
@@ -57,14 +61,55 @@ public class senatorView extends Fragment {
 
 
         TextView txtSenator = (TextView) my_view.findViewById(R.id.textSenatorName);
-        txtSenator.setText(senator_name);
+
+
+
+        ImageView Img_Prev = (ImageView) my_view.findViewById(R.id.imgPrev1);
+        ImageView Img_Next = (ImageView) my_view.findViewById(R.id.imgNext1);
+
+
+        if (show_prev)
+            Img_Prev.setVisibility(View.VISIBLE);
+        else
+            Img_Prev.setVisibility(View.INVISIBLE);
+
+              /////// | \\\\\\\\
+
+        if (show_next)
+            Img_Next.setVisibility(View.VISIBLE);
+        else
+            Img_Next.setVisibility(View.INVISIBLE);
+
+
+        if (party.equals("D"))
+        {
+            txtSenator.setText(senator_name +" \n(D)");
+            my_view.setBackgroundColor( Color.parseColor("#2980b9") );
+        }else
+
+        {
+            txtSenator.setText(senator_name +" \n(R)");
+            my_view.setBackgroundColor( Color.parseColor("#c0392b") );
+
+        }
+
+
+
+
+
 
 
         return my_view;
 
     }
 
-    public void initializeWithSenatorName(String senator, int bg_id, int row_i_, Context context_i_, String zip_) {
+    public void initializeWithSenatorName(String senator, int bg_id, int row_i_, Context context_i_, String zip_, Boolean show_prev_, Boolean show_next_, String party_) {
+
+
+
+        show_next = show_next_;
+        show_prev = show_prev_;
+        party = party_;
 
 
         senator_bg_id = bg_id;

@@ -6,7 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +27,10 @@ public class detailedView extends Activity {
     private congressPerson chosenSenate;
 
 
+    JSONObject representativeDetails;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,20 +40,124 @@ public class detailedView extends Activity {
 
         Intent myIntent = getIntent();
 
-        chosenZip = myIntent.getStringExtra("ZIP");
 
-        chosenPosition = myIntent.getIntExtra("POS", 0);
-
-
-
-
-        dataSource_fill();
-
-        chosenSenate = dataSource.get(chosenZip).get(chosenPosition);
-
+        try {
+            representativeDetails =  new JSONObject(myIntent.getStringExtra("DETAILS"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         TextView txtName = (TextView) this.findViewById(R.id.textSenatorName);
-        txtName.setText(chosenSenate.getName());
+
+        try {
+            txtName.setText(representativeDetails.getString("name"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+        TextView txtTitle = (TextView) this.findViewById(R.id.txtSenatorTitle);
+
+
+        String partyStr = "";
+
+
+        try {
+            partyStr = representativeDetails.getString("party");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        if (partyStr.equals("D"))
+        {
+            partyStr = "Democrat";
+        }else if (partyStr.equals("R"))
+        {
+            partyStr = "Republican";
+        }
+
+
+        String typeStr = "";
+
+        try {
+            typeStr = representativeDetails.getString("type");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (typeStr.equals("house"))
+        {
+            typeStr = "Representative";
+        }else
+        {
+            typeStr = "Senator";
+        }
+
+        try {
+            txtTitle.setText(partyStr + " " + typeStr+" - " +representativeDetails.getString("state") + "\n" + "End date of term: " + representativeDetails.getString("term_end"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+        ImageView imgView = (ImageView) this.findViewById(R.id.imgSenator);
+        try {
+            Picasso.with(this).load(representativeDetails.getString("picture")).fit().centerCrop().into(imgView);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        String billsAndCommittees = "No Bills / Committees details found";
+
+
+        try {
+
+            if (representativeDetails.getJSONArray("commities").length() > 0)
+            {
+                billsAndCommittees = "Committees: ";
+
+                JSONArray myCommitteesArray = representativeDetails.getJSONArray("commities");
+
+                for (int i = 0; i < myCommitteesArray.length(); i++)
+                {
+                    billsAndCommittees = billsAndCommittees + "\n- " +  myCommitteesArray.getString(i) ;
+                }
+
+            }
+
+
+            if (representativeDetails.getJSONArray("bills").length() > 0  )
+            {
+
+                billsAndCommittees = billsAndCommittees + "\n\nBills: ";
+
+                JSONArray myBillsArray = representativeDetails.getJSONArray("bills");
+
+                for (int i = 0; i < myBillsArray.length(); i++) {
+                    billsAndCommittees = billsAndCommittees + "\n- " + myBillsArray.getString(i);
+                }
+
+
+
+
+
+            }
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        TextView txtDetailsCommitteesAndBills = (TextView) this.findViewById(R.id.txtSenDetails);
+
+        txtDetailsCommitteesAndBills.setText(billsAndCommittees);
 
 
 
@@ -72,32 +187,7 @@ public class detailedView extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void dataSource_fill()
 
-    {
-        dataSource = new HashMap<String, ArrayList<congressPerson>>() ;
-
-
-
-
-        ArrayList<congressPerson> senators_batch_1 = new ArrayList<congressPerson>();
-
-
-        senators_batch_1.add(new congressPerson("Emin1","emin@emin.com \n www.emin.com","Senator - Republican","Let's vote California #freedom", R.drawable.rectangle_5,"Bill 1 \n Committee 1"));
-        senators_batch_1.add(new congressPerson("Emin2", "emin@emin.com \n www.emin.com", "Senator - Republican", "Let's vote California #freedom", R.drawable.rectangle_5, "Bill 1 \n Committee 1"));
-
-        dataSource.put("94704", senators_batch_1);
-
-        ArrayList<congressPerson> senators_batch_2 = new ArrayList<congressPerson>();
-
-
-        senators_batch_2.add(new congressPerson("Emin3","emin@emin.com \n www.emin.com","Senator - Republican","Let's vote California #freedom", R.drawable.rectangle_5,"Bill 1 \n Committee 1"));
-        senators_batch_2.add(new congressPerson("Emin4","emin@emin.com \n www.emin.com","Senator - Republican","Let's vote California #freedom", R.drawable.rectangle_5,"Bill 1 \n Committee 1"));
-
-        dataSource.put("94703", senators_batch_2);
-
-
-    }
 
 }
 

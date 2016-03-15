@@ -1,10 +1,13 @@
 package com.cs160.joleary.catnip;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.app.Activity;
@@ -17,10 +20,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
 import android.widget.AdapterView.OnItemClickListener;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -31,7 +37,22 @@ import java.util.ArrayList;
 import android.content.Intent;
 
 import android.content.IntentFilter;
+import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.entity.ByteArrayEntity;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 
 //
@@ -43,7 +64,10 @@ public class CongressionalList extends Activity {
     private IntentFilter mIntentFilter;
     BroadcastReceiver myReceive;
 
-    private Map<String, ArrayList<congressPerson>> dataSource;
+    private ProgressDialog mySpinner;
+
+    private JSONArray representativesList;
+    private JSONObject dataFillerFromServer;
 
     private String currentZip;
 
@@ -58,7 +82,6 @@ public class CongressionalList extends Activity {
         super.onCreate(savedInstanceState);
 
 
-        dataSource_fill();
 
 
 
@@ -72,10 +95,14 @@ public class CongressionalList extends Activity {
 
         setContentView(R.layout.senators_list_unique);
 
+        mySpinner  = new ProgressDialog(CongressionalList.this);
 
-        mySenators = dataSource.get(currentZip);
 
-        populateListView();
+        callServerWithRequestDetails(false,0.0,0.0,currentZip);
+
+//        mySenators = dataSource.get(currentZip);
+//
+//        populateListView();
 
 
         myReceive = new BroadcastReceiver(){
@@ -99,7 +126,11 @@ public class CongressionalList extends Activity {
                     finishActivity(2);
                     int sendMessage = 1;
                     intent_.putExtra("POS", watchPosition);
-                    intent_.putExtra("ZIP", currentZip);
+                    try {
+                        intent_.putExtra("DETAILS", representativesList.get(watchPosition).toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
 
                     startActivityForResult(intent_, 2);
@@ -111,21 +142,10 @@ public class CongressionalList extends Activity {
                     if (shakeHappened == false) {
                         shakeHappened = true;
 
-                        if (currentZip.equals("94704")) {
-                            currentZip = "94703";
-                        } else {
-                            currentZip = "94704";
-                        }
+
+                        callServerWithRequestDetails(false,0.0,0.0,"99999");
 
 
-
-                        mySenators = dataSource.get(currentZip);
-
-                        populateListView();
-
-                        Intent sendIntent = new Intent(getApplicationContext(), PhoneToWatchService.class);
-                        sendIntent.putExtra("ZIP", currentZip);
-                        startService(sendIntent);
                     }
 
                 }
@@ -190,18 +210,17 @@ public class CongressionalList extends Activity {
 
                 Intent intent = new Intent(getApplicationContext(), detailedView.class);
 
-                int sendMessage = position;
 
-                intent.putExtra("POS", position);
 
-                intent.putExtra("ZIP", currentZip);
+                //here we are sending the senator details from the representatives list right away
+
+                try {
+                    intent.putExtra("DETAILS", representativesList.get(position).toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 startActivityForResult(intent, 2);
-
-
-
-
-
 
 
             }
@@ -221,8 +240,14 @@ public class CongressionalList extends Activity {
     private class MyListAdapter extends ArrayAdapter<congressPerson>{
         public MyListAdapter()
         {
-            super(CongressionalList.this, R.layout.senator_list_item, mySenators );
+            super(CongressionalList.this, R.layout.senator_list_item );
 
+        }
+
+
+        @Override
+        public int getCount() {
+            return representativesList.length();
         }
 
         @Override
@@ -235,30 +260,117 @@ public class CongressionalList extends Activity {
             }
 
 
-            congressPerson currentPerson = mySenators.get(position);
+
+            //Encapsulate the json object statement with try/catch
+
+            JSONObject currentRep = null ;
+            try {
+                currentRep = (JSONObject) representativesList.get(position);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
+            try {
+                if (currentRep.getString("party").equals("D"))
+                {
+                    RelativeLayout card_ = (RelativeLayout) itemView.findViewById(R.id.insidecard) ;
+                    card_.setBackgroundColor(Color.parseColor("#2980b9"));
+                }else
+                {
+                    RelativeLayout card_ = (RelativeLayout) itemView.findViewById(R.id.insidecard) ;
+                    card_.setBackgroundColor(Color.parseColor("#c0392b"));
+
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //Once we have the object we can start populating our view here
+            //Adding all the design embelishments that we have in the world!!!
 
 
             TextView text_name = (TextView) itemView.findViewById(R.id.textName);
-            text_name.setText(currentPerson.getName());
+            try {
+                text_name.setText(currentRep.getString("name"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+//... TO BE CONTINUED
+
 
 
 
 
             ImageView imgView = (ImageView) itemView.findViewById(R.id.imgSen);
-            imgView.setImageResource(currentPerson.getIconID());
+            try {
+                Picasso.with(getContext()).load(currentRep.getString("picture")).fit().centerCrop().into(imgView);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
             TextView text_title = (TextView) itemView.findViewById(R.id.textTitle);
-            text_title.setText(currentPerson.getTitle());
+
+
+            String partyStr = "";
+
+
+            try {
+                 partyStr = currentRep.getString("party");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            if (partyStr.equals("D"))
+            {
+                partyStr = "Democrat";
+            }else if (partyStr.equals("R"))
+            {
+                partyStr = "Republican";
+            }
+
+
+            String typeStr = "";
+
+            try {
+                typeStr = currentRep.getString("type");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if (typeStr.equals("house"))
+            {
+                typeStr = "Representative";
+            }else
+            {
+                typeStr = "Senator";
+            }
+
+            try {
+                text_title.setText(partyStr + " " + typeStr+"\n" +currentRep.getString("state"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
 
+            TextView text_twitter = (TextView) itemView.findViewById(R.id.textTwitter);
+            try {
+                text_twitter.setText("@"+currentRep.getString("twitter")+": " + currentRep.getString("last_tweet"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
-
-
+            TextView text_comm = (TextView) itemView.findViewById(R.id.textComm);
+            try {
+                text_comm.setText(currentRep.getString("email") + "\n" + currentRep.getString("website"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
             return itemView;
@@ -279,33 +391,166 @@ public class CongressionalList extends Activity {
 
 
 
-
-    private void dataSource_fill()
-
+    public void callServerWithRequestDetails(Boolean isLocation, double lat, double longitude, String zip_ )
     {
-        dataSource = new HashMap<String, ArrayList<congressPerson>>() ;
+        HttpResponse g;
 
 
 
 
-        ArrayList<congressPerson> senators_batch_1 = new ArrayList<congressPerson>();
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        String json_;
 
 
-        senators_batch_1.add(new congressPerson("Emin1","emin@emin.com \n www.emin.com","Senator - Republican","Let's vote California #freedom", R.drawable.rectangle_5,"Bill 1 \n Committee 1"));
-        senators_batch_1.add(new congressPerson("Emin2", "emin@emin.com \n www.emin.com", "Senator - Republican", "Let's vote California #freedom", R.drawable.new_senator, "Bill 1 \n Committee 1"));
+        if (isLocation) {
 
-        dataSource.put("94704", senators_batch_1);
+            json_ = " {\n" +
+                    " \t\"type\": \"geo\",\n" +
+                    " \t\"data\": [" + new Double(lat).toString() +","+ new Double(longitude).toString() + "]\n" +
+                    " }";
+        }else
 
-        ArrayList<congressPerson> senators_batch_2 = new ArrayList<congressPerson>();
+        {
+
+            json_ = " {\n" +
+                    " \t\"type\": \"zip\",\n" +
+                    " \t\"data\": " +zip_.toString()+"\n" +
+                    " }";
 
 
-        senators_batch_2.add(new congressPerson("Emin3","emin@emin.com \n www.emin.com","Senator - Republican","Let's vote California #freedom", R.drawable.rectangle_5,"Bill 1 \n Committee 1"));
-        senators_batch_2.add(new congressPerson("Emin4","emin@emin.com \n www.emin.com","Senator - Republican","Let's vote California #freedom", R.drawable.new_senator,"Bill 1 \n Committee 1"));
+        }
 
-        dataSource.put("94703", senators_batch_2);
+
+
+
+
+
+        //ByteArrayEntity entity = new ByteArrayEntity(json_.getBytes("UTF-8"));
+
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(json_);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayEntity entity_ = null;
+        try {
+            entity_ = new ByteArrayEntity(json_.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+        entity_.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+
+
+        //Here we need to enable the spinner
+
+        mySpinner.setMessage("Loading ...");
+        mySpinner.show();
+
+
+
+
+        ///
+        client.post(getApplicationContext(), "http://tagjr.co/represent", entity_, "application/json", new JsonHttpResponseHandler() {
+
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Log.d("tag", "Login success");
+                //here is the SUCCESS
+
+                dataFillerFromServer = response;
+
+
+                //here we should call the
+
+
+                try {
+                    processServerResponseFromDataSource();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+
+
+
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Log.d("tag", "Login success");
+                //HERE IS THE FAIL
+
+                if (mySpinner.isShowing()) {
+                    mySpinner.dismiss();
+                }
+
+                Toast.makeText(getApplicationContext(), "Unknown Location", Toast.LENGTH_SHORT).show();
+
+
+
+            }
+
+
+        });
+
+
+
 
 
     }
+
+
+    void processServerResponseFromDataSource() throws JSONException {
+
+        if (mySpinner.isShowing()) {
+            mySpinner.dismiss();
+        }
+
+
+        JSONObject all_data = (JSONObject) dataFillerFromServer.get("all_data") ;
+
+        currentZip = new Integer(all_data.getInt("zip")).toString();
+
+
+
+
+
+
+        representativesList = (JSONArray)all_data.get("people");
+
+
+
+        populateListView();
+
+
+        Intent sendIntent = new Intent(getApplicationContext(), PhoneToWatchService.class);
+        sendIntent.putExtra("ZIP", all_data.toString());
+        startService(sendIntent);
+
+
+
+
+
+
+    }
+
+
+
+
+
+
 
 
 }

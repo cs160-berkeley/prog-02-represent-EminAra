@@ -14,7 +14,7 @@
 
     <ImageView
         android:layout_width="125dp"
-        android:layout_height="150dp"
+        android:layout_height="125dp"
         android:id="@+id/imgSenator"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Democratic Senator - CA\n End date of term : January 3, 2018 "
-        android:id="@+id/imgSenatorTitle"
+        android:id="@+id/txtSenatorTitle"
         android:layout_below="@+id/textSenatorName"
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
@@ -45,16 +45,28 @@
         android:textColor="#ecf0f1"
         android:textSize="14dp" />
 
-    <TextView
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Committees serving:\n. Committee on Appropriations  \n. Committee on the Judiciary  \n. Committee on Rules and Administration  \n. Select Committee on Intelligence (Vice Chair)  \n\nBills Sponsored:  \n. S. 2552 introduced on Feb 11, 2016  \n. S. 2533 introduced on Feb 10, 2016  \n. S. 2422 introduced on Jan 20, 2016  \n. S. 2442 introduced on Jan 12, 2016  \n. S. 2372 introduced on Dec 8, 2015"
-        android:id="@+id/textSenatorDetails"
-        android:layout_below="@+id/imgSenatorTitle"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/txtSenatorTitle"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="24dp"
-        android:textColor="#ecf0f1"
-        android:textSize="15dp" />
+        android:fillViewport="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Committees serving:\n. Committee on Appropriations  \n. Committee on the Judiciary  \n. Committee on Rules and Administration  \n. Select Committee on Intelligence (Vice Chair)  \n\nBills Sponsored:  \n. S. 2552 introduced on Feb 11, 2016  \n. S. 2533 introduced on Feb 10, 2016  \n. S. 2422 introduced on Jan 20, 2016  \n. S. 2442 introduced on Jan 12, 2016  \n. S. 2372 introduced on Dec 8, 2015"
+            android:id="@+id/txtSenDetails"
+            android:layout_below="@+id/txtSenatorTitle"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="24dp"
+            android:textColor="#ecf0f1"
+            android:textSize="15dp" />
+    </ScrollView>
+
 </RelativeLayout>
 

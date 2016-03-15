@@ -40,18 +40,17 @@
         android:height="16dp"
         android:layout_marginLeft="10dp"
         android:layout_below="@+id/textView"
-        android:layout_alignBottom="@+id/btnLoc"
-        android:layout_toStartOf="@+id/btnLoc" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/btnLoc"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentEnd="true"
         android:background="@drawable/loc"
-        android:maxHeight="50dp" />
+        android:maxHeight="50dp"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_alignEnd="@+id/textZipCode" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
