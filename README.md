@@ -12,7 +12,6 @@ See [Represent!] (https://www.youtube.com/watch?v=V2KmCyUAx1I)
 
 ## Screenshots
 
-*Note: This design will change*
 <div><p><center>
 <img src="http://s15.postimg.org/cqjc5cdor/device_2016_03_14_230303.png" width="268.8" height="460.8" align="left"/>
 <img src="http://s15.postimg.org/fw3xvjwaz/layout_2016_03_14_225410.png" width="268.8" height="460.8" align="right"/></center></p><BR CLEAR="both"></div>
